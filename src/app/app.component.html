@@ -1,6 +1,11 @@
 <app-nav-bar></app-nav-bar>
 <div class="container-fluid">
-  <app-product-list></app-product-list>
+  <!--<app-product-list></app-product-list>-->
+  <div class="nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
+    <a routerLink="/opps" routerLinkActive="active">404</a>
+  </div>
+  <router-outlet></router-outlet>
   <footer>
     <p>&copy; 2016 Company, Inc.</p>
   </footer>
