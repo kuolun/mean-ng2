@@ -5,20 +5,19 @@
     <!--<search-bar></search-bar>-->
   </div>
 </div>
-
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-4" *ngFor="let product of products">
-      <a ng-href="#">
-        <div class="thumbnail">
-          <img [src]="product.image">
-          <div class="caption">
-            <h4>{{product.name}}</h4>
-            <p>{{product.category}}</p>
-            <p>${{product.price}}</p>
-          </div>
+    <div class="col-md-4" *ngFor="let product of products | async">
+      <!--<a [routerLink]="['/product',product.id]">-->
+      <a [routerLink]="['/product',product.id]" class=" thumbnail ">
+        <img [src]="product?.image ">
+        <div class="caption ">
+          <h4>{{product?.name}}</h4>
+          <p>{{product?.gender}}</p>
+          <p>${{product?.height}}</p>
         </div>
       </a>
+      <!--</a>-->
     </div>
   </div>
 </div>
