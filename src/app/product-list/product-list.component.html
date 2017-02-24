@@ -5,10 +5,22 @@
     <!--<search-bar></search-bar>-->
   </div>
 </div>
+<div class="row">
+  <!--<pre>{{categories|async|json}}</pre>-->
+  <div class="col-md-2">
+    <select #c class="form-control" (change)="reloadProducts({gender:c.value})">
+    <option value="">選擇目錄...</option>
+    <option *ngFor="let category of categories"
+    value="{{category.gender}}">{{category.gender}}
+    </option>
+  </select>
+  </div>
+</div>
+<hr>
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-4" *ngFor="let product of products | async">
-      <!--<a [routerLink]="['/product',product.id]">-->
       <a [routerLink]="['/product',product.id]" class=" thumbnail ">
         <img [src]="product?.image ">
         <div class="caption ">
@@ -17,7 +29,6 @@
           <p>${{product?.height}}</p>
         </div>
       </a>
-      <!--</a>-->
     </div>
   </div>
 </div>

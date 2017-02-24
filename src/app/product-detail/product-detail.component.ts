@@ -14,6 +14,7 @@ import 'rxjs/add/operator/do';
 export class ProductDetailComponent implements OnInit {
   totalCount = 100;
   product;
+  isloading = true;
   constructor(
     private _route: ActivatedRoute,
     private _http: Http,
@@ -42,7 +43,10 @@ export class ProductDetailComponent implements OnInit {
       .map((response: Response) => response.json())
       // 幫image檔名加上url
       .map(product => Object.assign({}, product, { image: api + product.image }))
-      .subscribe(product => this.product = product);
+      .subscribe(product => {
+        this.isloading = false;
+        this.product = product
+      });
   }
 
 }

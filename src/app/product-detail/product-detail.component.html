@@ -1,6 +1,9 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
+      <div *ngIf="isloading">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+      </div>
       <div *ngIf='product' class="thumbnail">
         <img [src]="product.image">
       </div>
@@ -8,7 +11,10 @@
     <div class="col-md-4">
       <h3>{{product?.name}}</h3>
       <h1>${{product?.height}}</h1>
-      <button (click)="onBack()" class="btn btn-default">back</button>
+      <button (click)="onBack()" class="btn btn-danger">back</button>
+
+
+
       <!--<div class="btn-group">
         <button type="button" id="minus" class="btn btn-default" (click)="addQty(-1)">-</button>
         <button type="button" id="total" class="btn btn-default" [(ngModel)]="totalCount">{{totalCount}}</button>
@@ -28,6 +34,15 @@
         <a href="/cart" class="btn btn-danger btn-lg" *ngIf="user.user">Check Out</a>
         <a *ngIf="!user.user" href='/auth/facebook' class="btn btn-warning btn-lg">Signup to begin buying!</a>
       </form>-->
+    </div>
+    <div class="col-md-4">
+      <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="form-control">
+        </div>
+        <button type="submit" class="btn	btn-primary">Submit</button>
+      </form>
     </div>
   </div>
 </div>
