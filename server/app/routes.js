@@ -8,20 +8,20 @@ module.exports = function (app, passport) {
   //取得user model
   var User = require('./models/user');
 
-  var Stripe = require('stripe')('');
+  var Stripe = require('stripe')('sk_test_ZPTLcTtpDPvz3ZNkLt707GU4');
 
 
-
-  app.get('/', function (req, res) {
-    // res.send('my first server');
-    console.log("req.session in /");
-    console.log(req.session);
-    if (req.session.passport.user) {
-      res.send("Hello ,user:" + req.session.passport.user);
-    } else {
-      res.send("logout successful!");
-    }
-  });
+  // 因為ag2所以只回傳index.html
+  // app.get('/', function (req, res) {
+  //   // res.send('my first server');
+  //   console.log("req.session in /");
+  //   console.log(req.session);
+  //   if (req.session.passport.user) {
+  //     res.send("Hello ,user:" + req.session.passport.user);
+  //   } else {
+  //     res.send("logout successful!");
+  //   }
+  // });
 
   //localhost:3000/api/productName
   app.get('/about', function (req, res) {
@@ -36,6 +36,23 @@ module.exports = function (app, passport) {
     category.save(function (err, category) {
       res.json({
         category: category
+      });
+    });
+  });
+
+  // 取得所有產品分類
+  app.get('/categories/all', function (req, res) {
+    Category.find({}, function (error, categories) {
+      if (error) {
+        return res.
+          status(status.INTERNAL_SERVER_ERROR).
+          json({
+            error: error.toString()
+          });
+      }
+      console.log("categories got!");
+      res.json({
+        categories: categories
       });
     });
   });

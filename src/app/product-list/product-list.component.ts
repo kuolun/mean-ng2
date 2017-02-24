@@ -2,6 +2,7 @@ import { products } from '../data';
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-product-list',
@@ -28,18 +29,12 @@ export class ProductListComponent implements OnInit {
     // this.categories = this._http.get(urls)
     //   //取得response物件的body部分轉成json格式
     //   .map(res => res.json());
-
-    this.categories = [
-      {
-        id: 1,
-        gender: 'male'
-      }, {
-        id: 2,
-        gender: 'female'
-      }, {
-        id: 3,
-        gender: 'n/a'
-      },];
+    let urls = 'http://localhost:3000/categories/all'
+    this.categories =
+      this._http.get(urls)
+      .do(res => console.log(res))
+        .map(res => res.json());
+        
   }
 
   getProducts(filter?) {
