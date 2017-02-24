@@ -13,7 +13,8 @@ export class ProductListComponent implements OnInit {
   // products: Array<any> = products;
   products;
   categories;
-  url = 'https://starwars-json-server-ewtdxbyfdz.now.sh/people';
+  url = 'http://localhost:3000/products/';
+  url2= 'http://localhostt:3000/productsall';
   api = 'https://starwars-json-server-ewtdxbyfdz.now.sh/';
 
   // 抓gender分類male,female,n/a
@@ -32,23 +33,22 @@ export class ProductListComponent implements OnInit {
     let urls = 'http://localhost:3000/categories/all'
     this.categories =
       this._http.get(urls)
-      .do(res => console.log(res))
         .map(res => res.json());
         
   }
 
   getProducts(filter?) {
-    let url = this.url;
-    if (filter && filter.gender)
-      url += "?gender=" + filter.gender;
+    let url = this.url2;
+    if (filter && filter.id)
+    {
+      url = this.url;
+      url +=  filter.id;
+    }
+      
 
     // products是obs，所以template那邊要用async
-    this.products = this._http.get(url)
-      .map(products => {
-        //回傳一維array
-        return products.json()
-          .map(product => Object.assign({}, product, { image: this.api + product.image }))
-      });
+    this.products = this._http.get('http://localhost:3000/productsall')
+      .map(res => res.json());
   }
 
   reloadProducts(filter) {
@@ -57,7 +57,7 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit() {
     this.getProducts();
-    this.getCategory();
+    // this.getCategory();
   }
 
 }

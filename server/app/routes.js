@@ -57,6 +57,7 @@ module.exports = function (app, passport) {
     });
   });
 
+//用category id取得對應products
   app.get('/products/:id', function (req, res, next) {
     Product
       .find({
@@ -85,9 +86,10 @@ module.exports = function (app, passport) {
               error: error.toString()
             });
         }
-        res.json({
-          products: products
-        });
+        // res.json({
+        //   products: products
+        // });
+        res.json(products);
       });
   });
 

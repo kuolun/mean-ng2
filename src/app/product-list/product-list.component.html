@@ -7,11 +7,12 @@
 </div>
 <div class="row">
   <!--<pre>{{categories|async|json}}</pre>-->
+  <!--<pre>{{products|async|json}}</pre>-->
   <div class="col-md-2">
-    <select #c class="form-control" (change)="reloadProducts({gender:c.value})">
+    <select #c class="form-control" (change)="reloadProducts({id:c.value})">
     <option value="">選擇目錄...</option>
     <option *ngFor="let category of categories"
-    value="{{category.gender}}">{{category.gender}}
+    value="{{category.id}}">{{category.name}}
     </option>
   </select>
   </div>
@@ -25,8 +26,8 @@
         <img [src]="product?.image ">
         <div class="caption ">
           <h4>{{product?.name}}</h4>
-          <p>{{product?.gender}}</p>
-          <p>${{product?.height}}</p>
+          <p>{{product?.name}}</p>
+          <p>${{product?.price}}</p>
         </div>
       </a>
     </div>
