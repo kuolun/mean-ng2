@@ -11,8 +11,8 @@
   <div class="col-md-2">
     <select #c class="form-control" (change)="reloadProducts({id:c.value})">
     <option value="">選擇目錄...</option>
-    <option *ngFor="let category of categories"
-    value="{{category.id}}">{{category.name}}
+    <option *ngFor="let category of categories|async"
+    value="{{category._id}}">{{category.name}}
     </option>
   </select>
   </div>
@@ -28,6 +28,7 @@
           <h4>{{product?.name}}</h4>
           <p>{{product?.name}}</p>
           <p>${{product?.price}}</p>
+          <p>Category:{{product?.category.name}}</p>
         </div>
       </a>
     </div>

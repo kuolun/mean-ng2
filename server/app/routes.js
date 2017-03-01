@@ -45,10 +45,10 @@ module.exports = function (app, passport) {
     Category.find({}, function (error, categories) {
       if (error) {
         return res.
-          status(status.INTERNAL_SERVER_ERROR).
-          json({
-            error: error.toString()
-          });
+        status(status.INTERNAL_SERVER_ERROR).
+        json({
+          error: error.toString()
+        });
       }
       console.log("categories got!");
       res.json({
@@ -57,7 +57,7 @@ module.exports = function (app, passport) {
     });
   });
 
-//用category id取得對應products
+  //用category id取得對應products
   app.get('/products/:id', function (req, res, next) {
     Product
       .find({
@@ -82,14 +82,14 @@ module.exports = function (app, passport) {
       .exec(function (error, products) {
         if (error) {
           return res.status(500).
-            json({
-              error: error.toString()
-            });
+          json({
+            error: error.toString()
+          });
         }
-        // res.json({
-        //   products: products
-        // });
-        res.json(products);
+        res.json({
+          products: products
+        });
+        // res.json(products);
       });
   });
 
@@ -135,8 +135,8 @@ module.exports = function (app, passport) {
   app.get('/cart', function (req, res, next) {
     // 利用req.user._id去DB比對是否有此user
     User.findOne({
-      _id: req.user._id
-    })
+        _id: req.user._id
+      })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
@@ -190,9 +190,9 @@ module.exports = function (app, passport) {
     //check是否有user登入
     if (!req.user) {
       return res.status(401).
-        json({
-          error: 'User Not logged in!'
-        });
+      json({
+        error: 'User Not logged in!'
+      });
     }
     //user已登入,req.user存在(FB 驗證後會回傳user資料)
     //替換user中data.cart.product資料
@@ -203,15 +203,15 @@ module.exports = function (app, passport) {
       //錯誤處理
       if (error) {
         return res.status(500).
-          json({
-            error: error.toString()
-          });
+        json({
+          error: error.toString()
+        });
       } //資料找不到
       if (!user) {
         return res.status(404).
-          json({
-            error: 'Not found'
-          });
+        json({
+          error: 'Not found'
+        });
       }
       // populate完回傳
       res.json({
@@ -228,28 +228,28 @@ module.exports = function (app, passport) {
 
   app.post('/payment', function (req, res) {
     Stripe.charges.create({
-      // 從req.user.data去抓要charge的資料
-      //Stripe的價格要用cents所以x100且四捨五入
-      // for test
-      amount: 777,
-      // amount: Math.ceil(req.user.data.totalValue * 100),
-      currency: 'usd',
-      source: req.body.stripeToken, //取得stripeToken
-      description: 'Example charge from kuolun'
-    },
+        // 從req.user.data去抓要charge的資料
+        //Stripe的價格要用cents所以x100且四捨五入
+        // for test
+        amount: 777,
+        // amount: Math.ceil(req.user.data.totalValue * 100),
+        currency: 'usd',
+        source: req.body.stripeToken, //取得stripeToken
+        description: 'Example charge from kuolun'
+      },
       //成功的話會拿到charge object
       function (err, charge) {
         if (err && err.type === 'StripeCardError') {
           return res.status(400).
-            json({
-              error: err.toString()
-            });
+          json({
+            error: err.toString()
+          });
         }
         if (err) {
           return res.status(500).
-            json({
-              error: err.toString()
-            });
+          json({
+            error: err.toString()
+          });
         }
         // 清空購物車
         // req.user.data.cart = [];
@@ -276,4 +276,3 @@ module.exports = function (app, passport) {
 
 
 };
-
