@@ -13,7 +13,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 const routes: Routes = [
   { path: '', component: ProductListComponent, pathMatch: 'full' },
   { path: 'product/:id', component: ProductDetailComponent },
-  { path: '**', component: NotFoundComponent }
+  // { path: '**', component: NotFoundComponent }
 ]
 
 @NgModule({

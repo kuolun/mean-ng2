@@ -120,7 +120,7 @@ module.exports = function (app, passport) {
     }),
     function (req, res) {
       // Successful authentication, redirect home.
-      res.redirect('/');
+      res.redirect('http://localhost:4200/');
     }
   );
 
