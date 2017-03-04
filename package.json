@@ -21,6 +21,7 @@
     "@angular/platform-browser": "2.2.1",
     "@angular/platform-browser-dynamic": "2.2.1",
     "@angular/router": "3.2.1",
+    "angular2-jwt": "^0.1.28",
     "async": "^2.0.0-rc.6",
     "body-parser": "^1.15.1",
     "bootstrap": "^3.3.7",

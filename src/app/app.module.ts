@@ -1,3 +1,4 @@
+import { Auth } from './auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,10 +10,12 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { NotFoundComponent } from './not-found.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: ProductListComponent, pathMatch: 'full' },
   { path: 'product/:id', component: ProductDetailComponent },
+  { path: 'profile', component: ProfileComponent }
   // { path: '**', component: NotFoundComponent }
 ]
 
@@ -22,7 +25,8 @@ const routes: Routes = [
     NavBarComponent,
     ProductListComponent,
     NotFoundComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +34,7 @@ const routes: Routes = [
     HttpModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [Auth],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

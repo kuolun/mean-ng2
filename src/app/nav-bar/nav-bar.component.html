@@ -7,9 +7,12 @@
         <span class="badge">0</span>
       </a>
     </li>
-    <li><a href="/auth/facebook"><i class="fa fa-facebook"> Sign In</i></a></li>
-    <li><a href="/logout"><i class="fa fa-sign-out"> Sign Out</i></a></li>
-    <li><a href="/"><i class="fa fa-home"> Home</i></a></li>
+    <!--<li><a href="/auth/facebook"><i class="fa fa-facebook"> Sign In</i></a></li>-->
+    <!--<li><a href="/logout"><i class="fa fa-sign-out"> Sign Out</i></a></li>-->
+    <li><a href="#" (click)="auth.login()" *ngIf="!auth.authenticated()"><i class="fa fa-facebook"> Sign In</i></a></li>
+    <li><a routerLink="/profile" *ngIf="auth.authenticated()">Profile</a></li>
+    <li><a href="#" (click)="auth.logout()" *ngIf="auth.authenticated()"><i class="fa fa-sign-out"> Sign Out</i></a></li>
+    <li><a href="#" routerLink="/"><i class="fa fa-home"> Home</i></a></li>
     <li>
       <a href="" class="dropdown-toggle" data-toggle="dropdown">
         Categories

@@ -1,3 +1,4 @@
+import { Auth } from './auth.service';
 import { Component } from '@angular/core';
 
 interface Nav {
@@ -13,6 +14,9 @@ interface Nav {
 })
 export class AppComponent {
   title = 'app works!';
+  constructor(private auth: Auth) {
+
+  }
 
   nav: Nav[] = [
     {
