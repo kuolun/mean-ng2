@@ -93,6 +93,7 @@ module.exports = function (app, passport) {
       });
   });
 
+  // 用product_id找product
   app.get('/product/:id', function (req, res) {
     Product.findById({
       _id: req.params.id

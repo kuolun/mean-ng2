@@ -35,14 +35,13 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    const url = 'https://starwars-json-server-ewtdxbyfdz.now.sh/people/';
-    const api = 'https://starwars-json-server-ewtdxbyfdz.now.sh/';
+    const url = 'http://localhost:3000/product';
     const id = this._route.snapshot.params['id'];
-    this._http.get(url + id)
+    this._http.get(`${url}/${id}`)
       // 把res body內的string轉成json
       .map((response: Response) => response.json())
       // 幫image檔名加上url
-      .map(product => Object.assign({}, product, { image: api + product.image }))
+      .map(data => data.product)
       .subscribe(product => {
         this.isloading = false;
         this.product = product

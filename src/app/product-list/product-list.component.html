@@ -22,7 +22,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-4" *ngFor="let product of products | async">
-      <a [routerLink]="['/product',product.id]" class=" thumbnail ">
+      <a [routerLink]="['/product',product._id]" class=" thumbnail ">
         <img [src]="product?.image ">
         <div class="caption ">
           <h4>{{product?.name}}</h4>
