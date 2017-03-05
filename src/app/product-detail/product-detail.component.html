@@ -35,14 +35,14 @@
           <span class="btn btn-default btn-lg btn-qty" (click)="changeQty(1)">
               <span class="glyphicon glyphicon-plus"></span>
           </span>
-          <span class="btn btn-default btn-lg btn-qty">{{totalCount}}</span>
+          <span class="btn btn-default btn-lg btn-qty">{{quantity}}</span>
           <!--減號-->
           <span class="btn btn-default btn-lg btn-qty" (click)="changeQty(-1)">
               <span class="glyphicon glyphicon-minus "></span>
           </span>
         </div>
         <div class="col-md-4" *ngIf="auth.authenticated()">
-          <button class="btn btn-lg btn-info ">Add to Cart</button>
+          <button (click)="addToCart()" class="btn btn-lg btn-info ">Add to Cart</button>
         </div>
       </div>
       <hr>

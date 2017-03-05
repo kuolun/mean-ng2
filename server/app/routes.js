@@ -106,31 +106,7 @@ module.exports = function (app, passport) {
     })
   });
 
-  //FB
-  // 因為strategy那邊沒有給name，所以預設是facebook
-  // scope :要求更多權限
-  app.get('/auth/facebook', passport.authenticate('facebook', {
-    scope: 'email'
-  }));
 
-  // handle the callback after facebook has authenticated the user
-  // 一旦user成功通過fb認證 整個session都可存取req.user
-  app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-      failureRedirect: '/login'
-    }),
-    function (req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('http://localhost:4200/');
-    }
-  );
-
-  // passport的logout，會把session移除
-  app.get('/logout', function (req, res) {
-    // provided by passport.
-    req.logout();
-    res.redirect('/');
-  });
 
   //取出User的Cart資料 (for <cart>)
   app.get('/cart', function (req, res, next) {
@@ -148,18 +124,19 @@ module.exports = function (app, passport) {
       });
   });
 
-  app.post('/updateCart', function (req, res, next) {
+  // 更新購物車內容
+  app.put('/updateCart', function (req, res, next) {
     User.findById({
-      _id: req.user._id
+      clientID: req.body.clientID
     }, function (err, user) {
       user.data.cart.push({
         //put傳來的
-        product: req.body.productid,
-        quantity: parseInt(req.body.quantity),
-        subtotal: parseInt(req.body.subtotal)
+        product: req.body.item.productid,
+        quantity: parseInt(req.body.item.quantity),
+        subtotal: parseInt(req.body.item.subtotal)
       });
       // req.body內為JSON，是string(透過bodyParser處理)
-      user.data.totalValue = (user.data.totalValue + parseInt(req.body.subtotal));
+      user.data.totalValue += parseInt(req.body.item.subtotal);
       user.save(function (err, user) {
         if (err) return next(err);
         // 回傳save後的user
@@ -182,41 +159,6 @@ module.exports = function (app, passport) {
         console.log('save');
         if (err) return next(err);
         res.json(found);
-      });
-    });
-  });
-
-  //Load目前登入user的購物車資料
-  app.get('/me', function (req, res) {
-    //check是否有user登入
-    if (!req.user) {
-      return res.status(401).
-      json({
-        error: 'User Not logged in!'
-      });
-    }
-    //user已登入,req.user存在(FB 驗證後會回傳user資料)
-    //替換user中data.cart.product資料
-    req.user.populate({
-      path: 'data.cart.product'
-      // model: 'Product'
-    }, function (error, user) {
-      //錯誤處理
-      if (error) {
-        return res.status(500).
-        json({
-          error: error.toString()
-        });
-      } //資料找不到
-      if (!user) {
-        return res.status(404).
-        json({
-          error: 'Not found'
-        });
-      }
-      // populate完回傳
-      res.json({
-        user: user
       });
     });
   });

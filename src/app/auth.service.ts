@@ -34,9 +34,10 @@ export class Auth {
 
         //存newUser到DB
         this._userservice.createUser(profile)
-          .subscribe(savedUser => console.log('new user created:', savedUser));
-
-
+          .subscribe(savedUser => {
+            console.log('new user created:', savedUser)
+            this.userProfile.cart = savedUser.cart;
+          });
       })
     });
   }
