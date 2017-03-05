@@ -221,11 +221,7 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get('/logout', function (req, res) {
-    // provided by passport.
-    req.logout();
-    res.redirect('/');
-  });
+
 
   app.post('/payment', function (req, res) {
     Stripe.charges.create({
@@ -265,6 +261,54 @@ module.exports = function (app, passport) {
         // // for test
         res.send("charge success!");
       });
+  });
+
+
+  /**
+   * add new user from Auth0
+   */
+  app.post('/newUser', function (req, res, next) {
+    var profile = req.body;
+    //用email看是否user已存在DB
+    User.findOne({
+      email: profile.email
+    }, function (err, user) {
+
+      //如果有錯就回傳錯誤
+      if (err) {
+        console.log('DB error');
+        return;
+      }
+
+      //如果user已存在DB，不處理
+      // if the user is found, then log them in
+      if (user) {
+        return {
+          info: 'user exit in DB!'
+        };
+      } else {
+        //沒找到就存到DB
+        var newUser = new User();
+        //profile是Auth0回傳的資訊
+        newUser.clientID = profile.clientID;
+        newUser.email = profile.email;
+        newUser.profile.username = profile.name;
+        newUser.profile.picture = profile.picture;
+
+        //把新user存到DB
+        newUser.save(function (err, user) {
+          if (err) {
+            console.log('save error');
+            throw err;
+          }
+          return res.json({
+            savedUser: user
+          });
+        });
+      }
+
+
+    });
   });
 
 

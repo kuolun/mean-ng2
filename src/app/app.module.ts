@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 // custom service
 import { Auth } from './auth.service';
+import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { UserService } from './shared/services/user.service';
 
 import { AppComponent } from './app.component';
@@ -38,7 +39,7 @@ const routes: Routes = [
     HttpModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [Auth],
+  providers: [Auth, AUTH_PROVIDERS, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

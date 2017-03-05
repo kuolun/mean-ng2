@@ -25,6 +25,11 @@ require('./server/config/passport')(passport);
 // read cookies (needed for auth)
 app.use(cookieParser());
 
+//for application/json type request
+app.use(bodyParser.json());
+
+
+//for postman x-www-form-urlencoded type request
 app.use(bodyParser.urlencoded({
   extended: true
 }));

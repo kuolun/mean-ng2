@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Http, Response } from '@angular/http';
+import { Auth } from './../auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -8,13 +9,14 @@ import { Http, Response } from '@angular/http';
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
-  totalCount = 100;
+  totalCount = 1;
   product;
   isloading = true;
   constructor(
     private _route: ActivatedRoute,
     private _http: Http,
-    private _router: Router) {
+    private _router: Router,
+    private auth: Auth) {
 
   }
 
@@ -23,11 +25,13 @@ export class ProductDetailComponent implements OnInit {
   }
 
   subtotal(): number {
-    return 10;
+    return this.totalCount * this.product.price
   }
 
-  addQty(number) {
-    return 1
+  changeQty(num) {
+    this.totalCount += num;
+    if (this.totalCount < 1)
+      this.totalCount = 1;
   }
 
   ngOnInit() {
@@ -35,9 +39,7 @@ export class ProductDetailComponent implements OnInit {
     const id = this._route.snapshot.params['id'];
     this._http.get(`${url}/${id}`)
       // 把res body內的string轉成json
-      .map((response: Response) => response.json())
-      // 幫image檔名加上url
-      .map(data => data.product)
+      .map((res) => res.json().product)
       .subscribe(product => {
         this.isloading = false;
         this.product = product

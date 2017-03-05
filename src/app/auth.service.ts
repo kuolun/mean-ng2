@@ -1,3 +1,4 @@
+import { UserService } from './shared/services/user.service';
 // app/auth.service.ts
 
 import { Injectable } from '@angular/core';
@@ -13,7 +14,7 @@ export class Auth {
   // Configure Auth0
   lock = new Auth0Lock('05Do3jcn1zucqIw58tpB9e7MEbcUrOti', 'kuolun.auth0.com', {});
 
-  constructor() {
+  constructor(private _userservice: UserService) {
     //假設登入後切換到profile頁面，這時profile已經存到localStorage
     //service先把profile存到local variable，profile component就可以直接使用，不用再去LocalStorage抓
     //從localStorage取出的要parse為JS object
@@ -30,6 +31,12 @@ export class Auth {
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('profile', JSON.stringify(profile));
         this.userProfile = profile;
+
+        //存newUser到DB
+        this._userservice.createUser(profile)
+          .subscribe(savedUser => console.log('new user created:', savedUser));
+
+
       })
     });
   }
