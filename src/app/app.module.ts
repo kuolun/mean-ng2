@@ -1,9 +1,11 @@
-import { Auth } from './auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
+// custom service
+import { Auth } from './auth.service';
+import { UserService } from './shared/services/user.service';
 
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
@@ -12,11 +14,13 @@ import { NotFoundComponent } from './not-found.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ProfileComponent } from './profile/profile.component';
 
+import 'rxjs/add/operator/map';
+
 const routes: Routes = [
-  { path: '', component: ProductListComponent, pathMatch: 'full' },
   { path: 'product/:id', component: ProductDetailComponent },
-  { path: 'profile', component: ProfileComponent }
-  // { path: '**', component: NotFoundComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: '', component: ProductListComponent, pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' }
 ]
 
 @NgModule({
