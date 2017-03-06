@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-2">
-    <img src="{{profile.picture_large}}" style="width:100%" alt="" class="img-circle">
+    <img src="{{user.profile.picture}}" style="width:70%" alt="" class="img-circle">
   </div>
   <div class="col-md-10">
-    <h1>{{profile.nickname}}</h1>
-    <p>Email:{{profile.name}}</p>
-    <p>Last Update:{{profile.updated_time}}</p>
+    <h1>{{user.profile.username}}</h1>
+    <p>Email:{{user.email}}</p>
+    <p>clientID:{{user.clientID}}</p>
   </div>
 </div>

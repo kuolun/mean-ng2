@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  profile;
+  user;
   constructor(private auth: Auth) {
-    this.profile = this.auth.userProfile;
+    this.user = this.auth.userProfile;
   }
 
   ngOnInit() {

@@ -28,29 +28,28 @@ export class Auth {
         if (error) {
           throw new Error(error);
         }
-
-
         // 先呼叫checkUser(),false才建立
         //於DB建立newUser
-        if(!this.checkDBUser(profile)){
-            this.createUser(profile)
-            .subscribe(
-              savedUser => {
-                //後端回傳成功才存到localStorage
-                //把token跟profile存到localstorage
-                localStorage.setItem('id_token', authResult.idToken);
-                localStorage.setItem('profile', JSON.stringify(savedUser));
-                // 把DB回傳的user指向userProfile
-                this.userProfile = savedUser;
-              },
-              err => {
-                //錯誤的話要把user logout()
-                console.log(err);
-                this.logout();
-              });
-        }else{
-          console.log('User already in DB,no need to create');
-        }
+        // if(!this.checkDBUser(profile)){
+        this.createUser(profile)
+          .subscribe(
+          data => {
+            //後端回傳成功才存到localStorage
+            //把token跟profile存到localstorage
+            localStorage.setItem('id_token', authResult.idToken);
+            localStorage.setItem('profile', JSON.stringify(data.savedUser));
+            // 把DB回傳的user指向userProfile
+            console.log(data.savedUser);
+            this.userProfile = data.savedUser;
+          },
+          err => {
+            //錯誤的話要把user logout()
+            console.log(err);
+            this.logout();
+          });
+        // }else{
+        //   console.log('User already in DB,no need to create');
+        // }
       })
     });
   }
@@ -73,10 +72,10 @@ export class Auth {
   /**
    * Check User是否存在DB
    */
-  checkDBUser(profile){
-   return this._http.get(`http://localhost:3000/checkDBUser/${profile.email}`) 
-   .map(res=>res.json())
-   .subscribe(data=>data.user?true:false);
+  checkDBUser(profile) {
+    return this._http.get(`http://localhost:3000/checkDBUser/${profile.email}`)
+      .map(res => res.json())
+      .subscribe(data => data.user ? true : false);
   }
 
 

@@ -14,10 +14,12 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { ProfileComponent } from './profile/profile.component';
 
 import 'rxjs/add/operator/map';
+import { CartComponent } from './cart/cart.component';
 
 const routes: Routes = [
   { path: 'product/:id', component: ProductDetailComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'checkout', component: CartComponent },
   { path: '', component: ProductListComponent, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' }
 ]
@@ -29,7 +31,8 @@ const routes: Routes = [
     ProductListComponent,
     NotFoundComponent,
     ProductDetailComponent,
-    ProfileComponent
+    ProfileComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,

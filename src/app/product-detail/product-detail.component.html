@@ -44,6 +44,9 @@
         <div class="col-md-4" *ngIf="auth.authenticated()">
           <button (click)="addToCart()" class="btn btn-lg btn-info ">Add to Cart</button>
         </div>
+        <div class="col-md-4" *ngIf="auth.authenticated()">
+          <button routerLink="/checkout" class="btn btn-lg btn-info ">Check Out</button>
+        </div>
       </div>
       <hr>
       <!-- end row -->

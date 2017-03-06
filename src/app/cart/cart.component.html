@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6" ng-repeat="item in user.data.cart">
+      <!--產品資訊-->
+      <div class="list-group">
+        <span class="list-group-item">
+            <div class="row">
+                <!--產品圖-->
+                <div class="col-md-3">
+                  <span><img class="product-image" ng-src="{{item.product.image}}"></span>
+      </div>
+
+      <!--產品名-->
+      <div class="col-md-6">
+        <p class="list-group-item-heading">
+          {{item.product.name}}
+        </p>
+      </div>
+
+      <!--數量及價格-->
+      <div class="col-md-3">
+        <p>
+          {{item.quantity}}
+        </p>
+        <p>
+          {{item.product.price}}
+        </p>
+        <!--移除時同時移除DB資料-->
+        <form method="post">
+          <input type="hidden" name="item" value="">
+          <input type="hidden" name="price" value="">
+          <!--item在repeat的array中會有$index-->
+          <button type="submit" type="button" ng-click="removeItem($index)">Remove</button>
+        </form>
+      </div>
+    </div>
+    </span>
+  </div>
+</div>
+
+<div class="col-md-3"></div>
+
+<div class="col-md-3">
+  <div class="list-group">
+    <span class="list-group-item">
+      <h4>Total: $<span class="totalPrice">{{totalValue}}</span></h4>
+
+    <div class="form-group">
+      <input type="hidden" value="">
+      <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>
+    </div>
+    </span>
+  </div>
+</div>

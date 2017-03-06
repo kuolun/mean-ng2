@@ -13,8 +13,14 @@ export class NavBarComponent implements OnInit {
   }
 
   sum() {
-    let result = 0;
+    //取出購物車資料
+    let cart = this.auth.userProfile.data.cart
+    let sum = 0;
+    cart.forEach(item => {
+      sum += item.quantity;
+    });
 
+    return sum;
   }
 
 }

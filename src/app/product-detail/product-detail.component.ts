@@ -31,6 +31,7 @@ export class ProductDetailComponent implements OnInit {
     return this.quantity * this.product.price
   }
 
+  // 購買數量
   changeQty(num) {
     this.quantity += num;
     if (this.quantity < 1)
@@ -38,20 +39,31 @@ export class ProductDetailComponent implements OnInit {
   }
 
   /**
-   * 加到購物車
+   * product`加到購物車
    */
   addToCart() {
+
+    //購物車資料
+    let cartData = this.auth.userProfile.data;
+
     console.info('quantity:' + this.quantity);
     console.info('subtotal:' + this.subtotal());
     console.info('product.price:' + this.product.price);
 
 
-    // 把product，數量，總金額push到serveice
+    //購買產品資料
     var item = {
       productid: this.product._id,
       quantity: this.quantity,
       subtotal: this.subtotal()
     };
+
+    //增加cart array的item
+    cartData.cart.push(item);
+
+    //增加cartData的總金額
+    cartData.totalValue += this.subtotal();
+
 
     //更新DB(async)
     //傳入的資料為item，會放在req.body內
