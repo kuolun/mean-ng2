@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Http, Response } from '@angular/http';
 import { Auth } from './../auth.service';
-import { UserService } from './../shared/services/user.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,8 +18,7 @@ export class ProductDetailComponent implements OnInit {
     private _route: ActivatedRoute,
     private _http: Http,
     private _router: Router,
-    private auth: Auth,
-    private _userservice: UserService) {
+    private auth: Auth) {
   }
 
   // 回首頁
@@ -57,11 +55,11 @@ export class ProductDetailComponent implements OnInit {
 
     //更新DB(async)
     //傳入的資料為item，會放在req.body內
-    this._userservice.addProduct(item).
-      subscribe(user => {
-        //更新User service的products
-        this._userservice.products.push(item);
-      });
+    // this._userservice.addProduct(item).
+    //   subscribe(user => {
+    //     //更新User service的products
+    //     this._userservice.products.push(item);
+    //   });
   }
 
   ngOnInit() {

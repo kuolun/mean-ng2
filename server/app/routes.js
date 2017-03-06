@@ -45,10 +45,10 @@ module.exports = function (app, passport) {
     Category.find({}, function (error, categories) {
       if (error) {
         return res.
-        status(status.INTERNAL_SERVER_ERROR).
-        json({
-          error: error.toString()
-        });
+          status(status.INTERNAL_SERVER_ERROR).
+          json({
+            error: error.toString()
+          });
       }
       console.log("categories got!");
       res.json({
@@ -82,9 +82,9 @@ module.exports = function (app, passport) {
       .exec(function (error, products) {
         if (error) {
           return res.status(500).
-          json({
-            error: error.toString()
-          });
+            json({
+              error: error.toString()
+            });
         }
         res.json({
           products: products
@@ -112,8 +112,8 @@ module.exports = function (app, passport) {
   app.get('/cart', function (req, res, next) {
     // 利用req.user._id去DB比對是否有此user
     User.findOne({
-        _id: req.user._id
-      })
+      _id: req.user._id
+    })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
@@ -167,28 +167,28 @@ module.exports = function (app, passport) {
 
   app.post('/payment', function (req, res) {
     Stripe.charges.create({
-        // 從req.user.data去抓要charge的資料
-        //Stripe的價格要用cents所以x100且四捨五入
-        // for test
-        amount: 777,
-        // amount: Math.ceil(req.user.data.totalValue * 100),
-        currency: 'usd',
-        source: req.body.stripeToken, //取得stripeToken
-        description: 'Example charge from kuolun'
-      },
+      // 從req.user.data去抓要charge的資料
+      //Stripe的價格要用cents所以x100且四捨五入
+      // for test
+      amount: 777,
+      // amount: Math.ceil(req.user.data.totalValue * 100),
+      currency: 'usd',
+      source: req.body.stripeToken, //取得stripeToken
+      description: 'Example charge from kuolun'
+    },
       //成功的話會拿到charge object
       function (err, charge) {
         if (err && err.type === 'StripeCardError') {
           return res.status(400).
-          json({
-            error: err.toString()
-          });
+            json({
+              error: err.toString()
+            });
         }
         if (err) {
           return res.status(500).
-          json({
-            error: err.toString()
-          });
+            json({
+              error: err.toString()
+            });
         }
         // 清空購物車
         // req.user.data.cart = [];
@@ -215,28 +215,24 @@ module.exports = function (app, passport) {
     User.findOne({
       email: profile.email
     }, function (err, user) {
-
       //如果有錯就回傳錯誤
       if (err) {
         console.log('DB error');
-        return;
+        throw err;
       }
-
       //如果user已存在DB，不處理
-      // if the user is found, then log them in
       if (user) {
-        return {
-          info: 'user exit in DB!'
-        };
+        console.log('user already exist in DB');
+        // return res.json({ existedUser: user });
+        res.send({ warn: 'user already exist in DB!' });
       } else {
-        //沒找到就存到DB
+        //沒找到就新增一筆存到DB
         var newUser = new User();
         //profile是Auth0回傳的資訊
         newUser.clientID = profile.clientID;
         newUser.email = profile.email;
         newUser.profile.username = profile.name;
         newUser.profile.picture = profile.picture;
-
         //把新user存到DB
         newUser.save(function (err, user) {
           if (err) {
@@ -248,10 +244,19 @@ module.exports = function (app, passport) {
           });
         });
       }
-
-
     });
   });
+
+  /**
+   * check user in DB
+   */
+  app.get('/checkDBUser/:email', function (req, res, next) {
+     User.findOne({email: req.params.email},function(err,user){
+        if(err) return next(err);
+        res.json({user:user});
+      });
+    });  
+
 
 
 
