@@ -65,13 +65,14 @@ export class ProductDetailComponent implements OnInit {
     cartData.totalValue += this.subtotal();
 
 
+
     //更新DB(async)
     //傳入的資料為item，會放在req.body內
-    // this._userservice.addProduct(item).
-    //   subscribe(user => {
-    //     //更新User service的products
-    //     this._userservice.products.push(item);
-    //   });
+    this._http.put('http://localhost:3000/updateCart', {
+      item: item,
+      clientID: this.auth.userProfile.clientID
+    }).
+      subscribe(user => console.log(user));
   }
 
   ngOnInit() {

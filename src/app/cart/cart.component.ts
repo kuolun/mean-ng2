@@ -1,3 +1,5 @@
+import { Http } from '@angular/http';
+import { Auth } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartComponent implements OnInit {
 
-  constructor() { }
+  cart;
+  isloading = true;
+  user;
+
+  constructor(private auth: Auth,
+    private _http: Http) {
+    //從service抓資料
+    this.user = this.auth.userProfile;
+  }
+
+
 
   ngOnInit() {
+    this._http.get(`http://localhost:3000/cart/${this.user.email}`)
+      // 把res body內的string轉成json
+      .map((res) => res.json().cart)
+      .subscribe(cart => {
+        console.log(cart);
+        this.isloading = false;
+        this.cart = cart
+      });
+  }
+
+  totalCost() {
+    let total = 0;
+    this.cart.forEach(item => total += item.quantity * item.subtotal);
+    return total;
   }
 
 }

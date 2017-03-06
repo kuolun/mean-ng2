@@ -12,9 +12,9 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { NotFoundComponent } from './not-found.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ProfileComponent } from './profile/profile.component';
+import { CartComponent } from './cart/cart.component';
 
 import 'rxjs/add/operator/map';
-import { CartComponent } from './cart/cart.component';
 
 const routes: Routes = [
   { path: 'product/:id', component: ProductDetailComponent },

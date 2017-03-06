@@ -1,9 +1,9 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
-  <a class="navbar-brand" href="/">E-Commerce</a>
+  <a routerLink="/" class="navbar-brand">E-Commerce</a>
 
   <ul class="nav navbar-nav navbar-right">
     <li *ngIf="auth.authenticated()">
-      <a routerLik="/cart" class="glyphicon glyphicon-shopping-cart">
+      <a routerLink="/checkout" class="glyphicon glyphicon-shopping-cart">
         <span class="badge">{{sum()}}</span>
       </a>
     </li>

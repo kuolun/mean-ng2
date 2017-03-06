@@ -109,24 +109,25 @@ module.exports = function (app, passport) {
 
 
   //取出User的Cart資料 (for <cart>)
-  app.get('/cart', function (req, res, next) {
+  app.get('/cart/:email', function (req, res, next) {
     // 利用req.user._id去DB比對是否有此user
     User.findOne({
-        _id: req.user._id
+        email: req.params.email
       })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
+        console.log(user);
         if (err) return next(err);
         res.json({
-          user: user
+          cart: user.data.cart
         });
       });
   });
 
   // 更新購物車內容
   app.put('/updateCart', function (req, res, next) {
-    User.findById({
+    User.findOne({
       clientID: req.body.clientID
     }, function (err, user) {
       user.data.cart.push({
