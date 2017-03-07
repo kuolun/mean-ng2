@@ -2,6 +2,7 @@
 import { Http, Headers } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
+import { Router } from '@angular/router';
 
 // Avoid name not found warnings
 declare var Auth0Lock: any;
@@ -15,7 +16,7 @@ export class Auth {
   // Configure Auth0
   lock = new Auth0Lock('05Do3jcn1zucqIw58tpB9e7MEbcUrOti', 'kuolun.auth0.com', {});
 
-  constructor(private _http: Http) {
+  constructor(private _http: Http, private router: Router) {
     //假設登入後切換到profile頁面，這時profile已經存到localStorage
     //service先把profile存到local variable，profile component就可以直接使用，不用再去LocalStorage抓
     //從localStorage取出的要parse為JS object
@@ -98,6 +99,7 @@ export class Auth {
     localStorage.removeItem('id_token');
     localStorage.removeItem('profile');
     this.userProfile = null;
+    this.router.navigate(['/']);
   }
 
 
