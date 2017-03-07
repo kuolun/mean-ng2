@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { RequestOptions, Http, Headers, } from '@angular/http';
 import { Auth } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,6 +12,15 @@ export class CartComponent implements OnInit {
   cart;
   isloading = true;
   user;
+
+  totalValue = 0;
+
+  takePaymentResult: string;
+
+
+  //Stripe付款
+  // For checkout
+  // Stripe.setPublishableKey('pk_test_gYmq7G71sVayHcy4J8SjZHKA');
 
   constructor(private auth: Auth,
     private _http: Http) {
@@ -29,13 +38,53 @@ export class CartComponent implements OnInit {
         console.log(cart);
         this.isloading = false;
         this.cart = cart
+        this.totalCost();
       });
   }
 
   totalCost() {
-    let total = 0;
-    this.cart.forEach(item => total += item.quantity * item.subtotal);
-    return total;
+    this.cart.forEach(item => this.totalValue += item.quantity * item.subtotal);
+    return this.totalValue;
+  }
+
+
+  // 點pay button觸發，從stripe取回token
+  openCheckout() {
+    var handler = (<any>window).StripeCheckout.configure({
+      key: 'pk_test_gYmq7G71sVayHcy4J8SjZHKA',
+      locale: 'auto',
+      token: token => this.takePayment(token)
+    }
+    );
+
+    console.log(this.totalValue);
+
+    handler.open({
+      name: 'Shop Smart Site',
+      description: 'Pay with Stripe',
+      amount: this.totalValue * 100,// cent
+      allowRememberMe: false
+    });
+  }
+
+  // 送token跟結帳金額給後端
+  takePayment(token: any) {
+    let body = {
+      tokenId: token.id,
+      amount: this.totalValue,
+      userEmail: token.email
+    };
+    //把body轉成String
+    let bodyString = JSON.stringify(body);
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
+    this._http.post('http://localhost:3000/stripepayment', bodyString, options)
+      .subscribe(
+      res => console.log('data:', res.json()),
+      error => console.log(error.message),
+      () => console.log('Authentication Complete')
+      );
   }
 
 }

@@ -1,0 +1,16 @@
+/* The old "center div vertically" hack */
+.display-table {
+    display: table;
+}
+.display-tr {
+    display: table-row;
+}
+.display-td {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
+}
+/* Just looks nicer */
+.panel-heading img {
+    min-width: 180px;
+}

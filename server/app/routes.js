@@ -8,6 +8,7 @@ module.exports = function (app, passport) {
   //取得user model
   var User = require('./models/user');
 
+  // Stripe secret Key
   var Stripe = require('stripe')('sk_test_ZPTLcTtpDPvz3ZNkLt707GU4');
 
 
@@ -45,10 +46,10 @@ module.exports = function (app, passport) {
     Category.find({}, function (error, categories) {
       if (error) {
         return res.
-        status(status.INTERNAL_SERVER_ERROR).
-        json({
-          error: error.toString()
-        });
+          status(status.INTERNAL_SERVER_ERROR).
+          json({
+            error: error.toString()
+          });
       }
       console.log("categories got!");
       res.json({
@@ -82,9 +83,9 @@ module.exports = function (app, passport) {
       .exec(function (error, products) {
         if (error) {
           return res.status(500).
-          json({
-            error: error.toString()
-          });
+            json({
+              error: error.toString()
+            });
         }
         res.json({
           products: products
@@ -112,8 +113,8 @@ module.exports = function (app, passport) {
   app.get('/cart/:email', function (req, res, next) {
     // 利用req.user._id去DB比對是否有此user
     User.findOne({
-        email: req.params.email
-      })
+      email: req.params.email
+    })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
@@ -166,44 +167,33 @@ module.exports = function (app, passport) {
 
 
 
-  app.post('/payment', function (req, res) {
-    Stripe.charges.create({
-        // 從req.user.data去抓要charge的資料
-        //Stripe的價格要用cents所以x100且四捨五入
-        // for test
-        amount: 777,
-        // amount: Math.ceil(req.user.data.totalValue * 100),
-        currency: 'usd',
-        source: req.body.stripeToken, //取得stripeToken
-        description: 'Example charge from kuolun'
-      },
-      //成功的話會拿到charge object
-      function (err, charge) {
-        if (err && err.type === 'StripeCardError') {
-          return res.status(400).
-          json({
-            error: err.toString()
-          });
-        }
-        if (err) {
-          return res.status(500).
-          json({
-            error: err.toString()
-          });
-        }
-        // 清空購物車
-        // req.user.data.cart = [];
-        // req.user.data.totalValue = 0;
-        // req.user.save(function() {
-        //     // 成功的話回傳id及狀態
-        //     return res.json({
-        //         id: charge.id,
-        //         status: charge.status
-        //     });
-        // });
-        // // for test
-        res.send("charge success!");
-      });
+  app.post('/stripepayment', function (req, res) {
+    console.log('post incomming');
+    console.log('reg:', req.body)
+    Stripe.customers.create({
+      email: req.body.userEmail,
+      source: req.body.tokenId//從前端傳入的tokenId
+    })
+      .then(customer =>//建立user資料
+        Stripe.charges.create({
+          amount: Math.ceil(req.body.amount * 100),//Stripe的價格要用cents所以x100且四捨五入
+          description: "Example charge from kuolun",
+          currency: "usd",
+          customer: customer.id
+        }))
+      .then(charge => res.json(charge));
+
+
+    // 清空購物車
+    // req.user.data.cart = [];
+    // req.user.data.totalValue = 0;
+    // req.user.save(function() {
+    //     // 成功的話回傳id及狀態
+    //     return res.json({
+    //         id: charge.id,
+    //         status: charge.status
+    //     });
+    // });
   });
 
 

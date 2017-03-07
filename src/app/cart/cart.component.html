@@ -22,19 +22,24 @@
     </div>
   </div>
 
-  <div class="col-md-3"></div>
 
   <div class="col-md-3">
     <div class="list-group">
       <span class="list-group-item">
-      <h4>Total: $<span *ngIf="cart" class="totalPrice">{{totalCost()}}</span></h4>
+      <h4>Total: $<span *ngIf="cart" class="totalPrice">{{totalValue}}</span></h4>
 
       <div class="form-group">
-        <input type="hidden" value="">
-        <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>
+        <!--<button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>-->
         <button routerLink="/" class="btn btn-danger btn-lg">Continue shopping</button>
       </div>
       </span>
     </div>
   </div>
 </div>
+
+<h1>Default Stripe Form</h1>
+<div class="form-group" *ngIf="takePaymentResult">
+  <p>Payment Result: {{takePaymentResult}}</p>
+</div>
+
+<button class="btn btn-danger btn-lg" (click)="openCheckout()">Purchase</button>
