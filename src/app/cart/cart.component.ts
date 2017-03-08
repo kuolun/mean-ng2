@@ -9,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartComponent implements OnInit {
 
+
+
   cart;
   isloading = true;
+
+  // 目前登入的user資料
   user;
 
   totalValue = 0;
@@ -19,12 +23,9 @@ export class CartComponent implements OnInit {
 
 
   //Stripe付款
-  // For checkout
-  // Stripe.setPublishableKey('pk_test_gYmq7G71sVayHcy4J8SjZHKA');
-
   constructor(private auth: Auth,
     private _http: Http) {
-    //從service抓資料
+    //從service抓目前登入user資料
     this.user = this.auth.userProfile;
   }
 
@@ -72,19 +73,27 @@ export class CartComponent implements OnInit {
     let body = {
       tokenId: token.id,
       amount: this.totalValue,
-      userEmail: token.email
-    };
+      userEmail: token.email,
+      user: this.user
+    }
+
     //把body轉成String
-    let bodyString = JSON.stringify(body);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
+    let bodyString = JSON.stringify(body)
+    let headers = new Headers({ 'Content-Type': 'application/json' })
+    let options = new RequestOptions({ headers: headers })
 
     this._http.post('http://localhost:3000/stripepayment', bodyString, options)
       .subscribe(
-      res => console.log('data:', res.json()),
+      res => {
+        console.log('data:', res.json().status)
+        // 清空localStorage的cart資料
+        this.user.data.cart=[]
+        this.user.data.totalValue=0
+        localStorage.setItem('profile', JSON.stringify(this.user));
+      },
       error => console.log(error.message),
       () => console.log('Authentication Complete')
-      );
+      )
   }
 
 }

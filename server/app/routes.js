@@ -129,7 +129,7 @@ module.exports = function (app, passport) {
   // 更新購物車內容
   app.put('/updateCart', function (req, res, next) {
     User.findOne({
-      clientID: req.body.clientID
+      email: req.body.email
     }, function (err, user) {
       user.data.cart.push({
         //put傳來的
@@ -166,35 +166,49 @@ module.exports = function (app, passport) {
   });
 
 
+  /**
+   * Stripe結帳
+   */
 
   app.post('/stripepayment', function (req, res) {
+    let user = req.body.user;
+
     console.log('post incomming');
     console.log('reg:', req.body)
+    console.log('current user:', user);
+
+
+    //建立user資料
     Stripe.customers.create({
       email: req.body.userEmail,
       source: req.body.tokenId//從前端傳入的tokenId
     })
-      .then(customer =>//建立user資料
+      .then(customer =>//建立charge資料
         Stripe.charges.create({
           amount: Math.ceil(req.body.amount * 100),//Stripe的價格要用cents所以x100且四捨五入
           description: "Example charge from kuolun",
           currency: "usd",
           customer: customer.id
         }))
-      .then(charge => res.json(charge));
-
-
-    // 清空購物車
-    // req.user.data.cart = [];
-    // req.user.data.totalValue = 0;
-    // req.user.save(function() {
-    //     // 成功的話回傳id及狀態
-    //     return res.json({
-    //         id: charge.id,
-    //         status: charge.status
-    //     });
-    // });
+      .then(charge => {
+        // res.json(charge)
+        User.findOne({ email: user.email }, function (err, user) {
+          // 清空DB購物車
+          user.data.cart = [];
+          user.data.totalValue = 0;
+          user.save(function () {
+            // 成功的話回傳id及狀態
+            return res.json({
+              id: charge.id,
+              status: charge.status
+            });
+          });
+        })
+      });
   });
+
+
+
 
 
   /**

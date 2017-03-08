@@ -42,7 +42,6 @@ export class ProductDetailComponent implements OnInit {
    * product`加到購物車
    */
   addToCart() {
-
     //購物車資料
     let cartData = this.auth.userProfile.data;
 
@@ -70,7 +69,9 @@ export class ProductDetailComponent implements OnInit {
     //傳入的資料為item，會放在req.body內
     this._http.put('http://localhost:3000/updateCart', {
       item: item,
-      clientID: this.auth.userProfile.clientID
+      // 不能用clientID,2個user都一樣?
+      // clientID: this.auth.userProfile.clientID
+      email: this.auth.userProfile.email
     }).
       subscribe(user => console.log(user));
   }
