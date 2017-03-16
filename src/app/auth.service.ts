@@ -31,7 +31,7 @@ export class Auth {
         }
         // 先呼叫checkUser(),false才建立
         //於DB建立newUser
-        // if(!this.checkDBUser(profile)){
+        if(!this.checkDBUser(profile)){
         this.createUser(profile)
           .subscribe(
           data => {
@@ -40,7 +40,7 @@ export class Auth {
             localStorage.setItem('id_token', authResult.idToken);
             localStorage.setItem('profile', JSON.stringify(data.savedUser));
             // 把DB回傳的user指向userProfile
-            console.log(data.savedUser);
+            console.log('savedUser:',data.savedUser);
             this.userProfile = data.savedUser;
           },
           err => {
@@ -48,9 +48,19 @@ export class Auth {
             console.log(err);
             this.logout();
           });
-        // }else{
-        //   console.log('User already in DB,no need to create');
-        // }
+        }else{
+          console.log('User already in DB,load user data');
+          this.loadUser(profile)
+          .subscribe(data=>{
+            console.log('LoadedUser:',data.loadedUser);
+
+            // 把載入的user存到localStorage
+            localStorage.setItem('id_token', authResult.idToken);
+            localStorage.setItem('profile', JSON.stringify(data.loadedUser));
+
+            this.userProfile=data.loadedUser;
+          });
+        }
       })
     });
   }
@@ -77,6 +87,14 @@ export class Auth {
     return this._http.get(`http://localhost:3000/checkDBUser/${profile.email}`)
       .map(res => res.json())
       .subscribe(data => data.user ? true : false);
+  }
+
+  /**
+   * 載入DB User資料
+   */
+  loadUser(profile){
+    return this._http.get(`http://localhost:3000/user/${profile.email}`)
+    .map(res=>res.json());
   }
 
 

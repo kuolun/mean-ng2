@@ -21,6 +21,19 @@ export class ProductDetailComponent implements OnInit {
     private auth: Auth) {
   }
 
+  ngOnInit() {
+    //用id抓取這個product資料
+    const url = 'http://localhost:3000/product';
+    const id = this._route.snapshot.params['id'];
+    this._http.get(`${url}/${id}`)
+      // 把res body內的string轉成json
+      .map((res) => res.json().product)
+      .subscribe(product => {
+        this.isloading = false;
+        this.product = product
+      });
+  }
+
   // 回首頁
   onBack() {
     this._router.navigate(['/']);
@@ -45,14 +58,14 @@ export class ProductDetailComponent implements OnInit {
     //購物車資料
     let cartData = this.auth.userProfile.data;
 
-    console.info('quantity:' + this.quantity);
-    console.info('subtotal:' + this.subtotal());
-    console.info('product.price:' + this.product.price);
-
+    console.info('quantity:', this.quantity);
+    console.info('product.price:', this.product.price);
+    console.info('subtotal:', this.subtotal());
+    console.log('OldtotalValue', cartData.totalValue);
 
     //購買產品資料
     var item = {
-      productid: this.product._id,
+      product: this.product._id,
       quantity: this.quantity,
       subtotal: this.subtotal()
     };
@@ -63,12 +76,13 @@ export class ProductDetailComponent implements OnInit {
     //增加cartData的總金額
     cartData.totalValue += this.subtotal();
 
-
+    console.log('totalValue', cartData.totalValue);
 
     //更新DB(async)
     //傳入的資料為item，會放在req.body內
     this._http.put('http://localhost:3000/updateCart', {
-      item: item,
+      newCart: cartData.cart,
+      newTotal: cartData.totalValue,
       // 不能用clientID,2個user都一樣?
       // clientID: this.auth.userProfile.clientID
       email: this.auth.userProfile.email
@@ -76,17 +90,6 @@ export class ProductDetailComponent implements OnInit {
       subscribe(user => console.log(user));
   }
 
-  ngOnInit() {
-    //用id抓取這個product資料
-    const url = 'http://localhost:3000/product';
-    const id = this._route.snapshot.params['id'];
-    this._http.get(`${url}/${id}`)
-      // 把res body內的string轉成json
-      .map((res) => res.json().product)
-      .subscribe(product => {
-        this.isloading = false;
-        this.product = product
-      });
-  }
+
 
 }

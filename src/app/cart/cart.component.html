@@ -1,13 +1,13 @@
 <div class="container">
-  <div class="row">
-    <div class="col-lg-6" *ngFor="let item of cart">
+  <div *ngIf="user" class="row">
+    <div class="col-lg-6" *ngFor="let item of user.data.cart;let i = index;">
       <!--產品資訊-->
       <div class="list-group">
         <div class="list-group-item">
           <div class="row">
             <!--產品圖-->
             <div class="col-md-3">
-              <span><img class="product-image" [src]="item.product.image "></span>
+              <span><img class="product-image" [src]="item.product.image"></span>
             </div>
             <!--產品名-->
             <div class="col-md-6">
@@ -19,6 +19,7 @@
             <div class="col-md-3">
               <p class="list-group-item-text">Quantity:{{item.quantity}}</p>
               <p class="list-group-item-text">Price:{{item.product.price}}</p>
+              <button (click)="removeProduct(i)" class="btn btn-lg btn-info ">Remove</button>
             </div>
           </div>
         </div>
@@ -30,11 +31,12 @@
   <div class="col-md-3">
     <div class="list-group">
       <span class="list-group-item">
-      <h4>Total: $<span *ngIf="cart" class="totalPrice">{{totalValue}}</span></h4>
+      <h4>Total: $<span *ngIf="user" class="totalPrice">{{user.data.totalValue}}</span></h4>
 
       <div class="form-group">
         <!--<button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>-->
         <button routerLink="/" class="btn btn-danger btn-lg">Continue shopping</button>
+        <button class="btn btn-warning btn-lg" (click)="openCheckout()">Purchase</button>
       </div>
       </span>
     </div>
@@ -45,5 +47,3 @@
 <div class="form-group" *ngIf="takePaymentResult">
   <p>Payment Result: {{takePaymentResult}}</p>
 </div>
-
-<button class="btn btn-danger btn-lg" (click)="openCheckout()">Purchase</button>

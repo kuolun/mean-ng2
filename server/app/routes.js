@@ -111,7 +111,6 @@ module.exports = function (app, passport) {
 
   //取出User的Cart資料 (for <cart>)
   app.get('/cart/:email', function (req, res, next) {
-    // 利用req.user._id去DB比對是否有此user
     User.findOne({
       email: req.params.email
     })
@@ -126,41 +125,75 @@ module.exports = function (app, passport) {
       });
   });
 
+  // 載入User資料
+    app.get('/user/:email', function (req, res, next) {
+    User.findOne({
+      email: req.params.email
+    })
+      //因為product的type為ObjectId所以要populate
+      .populate('data.cart.product')
+      .exec(function (err, user) {
+        console.log('user in DB:',user);
+        if (err) return next(err);
+        res.json({
+          loadedUser: user
+        });
+      });
+  });
+
+  // 更新購物車內容
+  // app.put('/updateCart', function (req, res, next) {
+  //   User.findOne({
+  //     email: req.body.email
+  //   }, function (err, user) {
+  //     user.data.cart.push({
+  //       //put傳來的
+  //       product: req.body.item.productid,
+  //       quantity: parseInt(req.body.item.quantity),
+  //       subtotal: parseInt(req.body.item.subtotal)
+  //     });
+  //     // req.body內為JSON，是string(透過bodyParser處理)
+  //     user.data.totalValue += parseInt(req.body.item.subtotal);
+  //     user.save(function (err, user) {
+  //       if (err) return next(err);
+  //       // 回傳save後的user
+  //       return res.json({
+  //         user: user
+  //       });
+  //     });
+  //   });
+  // });
   // 更新購物車內容
   app.put('/updateCart', function (req, res, next) {
     User.findOne({
       email: req.body.email
-    }, function (err, user) {
-      user.data.cart.push({
-        //put傳來的
-        product: req.body.item.productid,
-        quantity: parseInt(req.body.item.quantity),
-        subtotal: parseInt(req.body.item.subtotal)
-      });
-      // req.body內為JSON，是string(透過bodyParser處理)
-      user.data.totalValue += parseInt(req.body.item.subtotal);
-      user.save(function (err, user) {
+    }, function (err, foundUser) {
+      foundUser.data.cart=req.body.newCart;
+      foundUser.data.totalValue=req.body.newTotal;
+      foundUser.save(function (err, savedUser) {
         if (err) return next(err);
         // 回傳save後的user
         return res.json({
-          user: user
+          savedUser: savedUser
         });
       });
     });
   });
 
-  app.post('/remove', function (req, res, next) {
+  app.put('/remove', function (req, res, next) {
     User.findOne({
-      // 有登入的傳進來的req會帶有user資料(req.user)
-      _id: req.user._id
+      email: req.body.email
     }, function (err, foundUser) {
-      // 利用ObjectId移除該item
-      foundUser.data.cart.pull(String(req.body.itemid));
-      foundUser.data.totalValue = (foundUser.data.totalValue - parseInt(req.body.subtotal));
-      foundUser.save(function (err, found) {
+      console.log('foundUser:',foundUser);
+      console.log('body.updatedItem:',req.body.updatedItem);
+      // 用傳入的updatedItem.cart把原本的cart換掉
+      // 總金額也更新
+      foundUser.data.cart = req.body.updatedItem.cart;
+      foundUser.data.totalValue = req.body.updatedItem.totalValue;
+      foundUser.save(function (err, savedUser) {
         console.log('save');
         if (err) return next(err);
-        res.json(found);
+        res.json(savedUser);
       });
     });
   });
