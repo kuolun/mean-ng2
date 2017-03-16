@@ -74,8 +74,7 @@ export class CartComponent implements OnInit {
 
   //從購物車移除prodcut
   removeProduct(productIndex) {
-    console.log('remove');
-    console.log(productIndex);
+    console.log('remove index:', productIndex);
 
 
     //更新service的總金額

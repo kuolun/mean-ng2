@@ -70,6 +70,9 @@ export class ProductDetailComponent implements OnInit {
       subtotal: this.subtotal()
     };
 
+    /**
+     * 更新Service
+     */
     //增加cart array的item
     cartData.cart.push(item);
 
@@ -78,7 +81,10 @@ export class ProductDetailComponent implements OnInit {
 
     console.log('totalValue', cartData.totalValue);
 
-    //更新DB(async)
+
+    /**
+     * 更新DB(async)
+     */
     //傳入的資料為item，會放在req.body內
     this._http.put('http://localhost:3000/updateCart', {
       newCart: cartData.cart,

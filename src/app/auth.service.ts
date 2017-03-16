@@ -31,35 +31,35 @@ export class Auth {
         }
         // 先呼叫checkUser(),false才建立
         //於DB建立newUser
-        if(!this.checkDBUser(profile)){
-        this.createUser(profile)
-          .subscribe(
-          data => {
-            //後端回傳成功才存到localStorage
-            //把token跟profile存到localstorage
-            localStorage.setItem('id_token', authResult.idToken);
-            localStorage.setItem('profile', JSON.stringify(data.savedUser));
-            // 把DB回傳的user指向userProfile
-            console.log('savedUser:',data.savedUser);
-            this.userProfile = data.savedUser;
-          },
-          err => {
-            //錯誤的話要把user logout()
-            console.log(err);
-            this.logout();
-          });
-        }else{
+        if (!this.checkDBUser(profile)) {
+          this.createUser(profile)
+            .subscribe(
+            data => {
+              //後端回傳成功才存到localStorage
+              //把token跟profile存到localstorage
+              localStorage.setItem('id_token', authResult.idToken);
+              localStorage.setItem('profile', JSON.stringify(data.savedUser));
+              // 把DB回傳的user指向userProfile
+              console.log('savedUser:', data.savedUser);
+              this.userProfile = data.savedUser;
+            },
+            err => {
+              //錯誤的話要把user logout()
+              console.log(err);
+              this.logout();
+            });
+        } else {
           console.log('User already in DB,load user data');
           this.loadUser(profile)
-          .subscribe(data=>{
-            console.log('LoadedUser:',data.loadedUser);
+            .subscribe(data => {
+              console.log('LoadedUser:', data.loadedUser);
 
-            // 把載入的user存到localStorage
-            localStorage.setItem('id_token', authResult.idToken);
-            localStorage.setItem('profile', JSON.stringify(data.loadedUser));
+              // 把載入的user存到localStorage
+              localStorage.setItem('id_token', authResult.idToken);
+              localStorage.setItem('profile', JSON.stringify(data.loadedUser));
 
-            this.userProfile=data.loadedUser;
-          });
+              this.userProfile = data.loadedUser;
+            });
         }
       })
     });
@@ -92,9 +92,9 @@ export class Auth {
   /**
    * 載入DB User資料
    */
-  loadUser(profile){
+  loadUser(profile) {
     return this._http.get(`http://localhost:3000/user/${profile.email}`)
-    .map(res=>res.json());
+      .map(res => res.json());
   }
 
 
@@ -120,43 +120,4 @@ export class Auth {
     this.router.navigate(['/']);
   }
 
-
-  /**
-   * Get a single user
-   */
-  getUser(id) {
-    return this._http.get(`${this.userUrl}/${id}`).map(res => res.json());
-  }
-
-
-
-
-  /**
-   * Add products
-   */
-  // addProduct(item) {
-  //   const headers = new Headers();
-  //   headers.append('Content-Type', 'application/json');
-
-  //   let productInfo = {
-  //     item: item,
-  //     clientID: this.auth.userProfile.clientID
-  //   };
-
-  //   return this._http.put('/updateCart',
-  //     productInfo, { headers: headers }).
-  //     map(res => res.json());
-
-  // }
-
-
-
-
-  /**
-   * Remove product
-   */
-
-  /**
-   * Checkout
-   */
 }

@@ -126,14 +126,14 @@ module.exports = function (app, passport) {
   });
 
   // 載入User資料
-    app.get('/user/:email', function (req, res, next) {
+  app.get('/user/:email', function (req, res, next) {
     User.findOne({
       email: req.params.email
     })
       //因為product的type為ObjectId所以要populate
       .populate('data.cart.product')
       .exec(function (err, user) {
-        console.log('user in DB:',user);
+        console.log('user in DB:', user);
         if (err) return next(err);
         res.json({
           loadedUser: user
@@ -141,35 +141,14 @@ module.exports = function (app, passport) {
       });
   });
 
-  // 更新購物車內容
-  // app.put('/updateCart', function (req, res, next) {
-  //   User.findOne({
-  //     email: req.body.email
-  //   }, function (err, user) {
-  //     user.data.cart.push({
-  //       //put傳來的
-  //       product: req.body.item.productid,
-  //       quantity: parseInt(req.body.item.quantity),
-  //       subtotal: parseInt(req.body.item.subtotal)
-  //     });
-  //     // req.body內為JSON，是string(透過bodyParser處理)
-  //     user.data.totalValue += parseInt(req.body.item.subtotal);
-  //     user.save(function (err, user) {
-  //       if (err) return next(err);
-  //       // 回傳save後的user
-  //       return res.json({
-  //         user: user
-  //       });
-  //     });
-  //   });
-  // });
+
   // 更新購物車內容
   app.put('/updateCart', function (req, res, next) {
     User.findOne({
       email: req.body.email
     }, function (err, foundUser) {
-      foundUser.data.cart=req.body.newCart;
-      foundUser.data.totalValue=req.body.newTotal;
+      foundUser.data.cart = req.body.newCart;
+      foundUser.data.totalValue = req.body.newTotal;
       foundUser.save(function (err, savedUser) {
         if (err) return next(err);
         // 回傳save後的user
@@ -184,8 +163,8 @@ module.exports = function (app, passport) {
     User.findOne({
       email: req.body.email
     }, function (err, foundUser) {
-      console.log('foundUser:',foundUser);
-      console.log('body.updatedItem:',req.body.updatedItem);
+      console.log('foundUser:', foundUser);
+      console.log('body.updatedItem:', req.body.updatedItem);
       // 用傳入的updatedItem.cart把原本的cart換掉
       // 總金額也更新
       foundUser.data.cart = req.body.updatedItem.cart;
@@ -258,33 +237,24 @@ module.exports = function (app, passport) {
         console.log('DB error');
         throw err;
       }
-      //如果user已存在DB，不處理
-      if (user) {
-        // console.log('user already exist in DB');
-        // return res.json({ existedUser: user });
-        // res.send({ warn: 'user already exist in DB!' });
-        res.json({
+
+      var newUser = new User();
+      //profile是Auth0回傳的資訊
+      newUser.clientID = profile.clientID;
+      newUser.email = profile.email;
+      newUser.profile.username = profile.name;
+      newUser.profile.picture = profile.picture;
+      //把新user存到DB
+      newUser.save(function (err, user) {
+        if (err) {
+          console.log('save error');
+          throw err;
+        }
+        return res.json({
           savedUser: user
         });
-      } else {
-        //沒找到就新增一筆存到DB
-        var newUser = new User();
-        //profile是Auth0回傳的資訊
-        newUser.clientID = profile.clientID;
-        newUser.email = profile.email;
-        newUser.profile.username = profile.name;
-        newUser.profile.picture = profile.picture;
-        //把新user存到DB
-        newUser.save(function (err, user) {
-          if (err) {
-            console.log('save error');
-            throw err;
-          }
-          return res.json({
-            savedUser: user
-          });
-        });
-      }
+      });
+
     });
   });
 
