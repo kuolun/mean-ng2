@@ -14,3 +14,7 @@
 .panel-heading img {
     min-width: 180px;
 }
+
+.product-image{
+  width:100%;
+}

@@ -2,20 +2,24 @@
   <div class="row">
     <div class="col-lg-6" *ngFor="let item of cart">
       <!--產品資訊-->
-      <div class="row">
-        <!--產品圖-->
-        <div class="col-md-3">
-          <span><img class="product-image" [src]="item.product.image "></span>
-          <!--產品名-->
-          <div class="col-md-6">
-            <p class="list-group-item-heading">
-              {{item.product.name}}
-            </p>
-          </div>
-          <!--數量及價格-->
-          <div class="col-md-3">
-            <p>{{item.quantity}}</p>
-            <p>{{item.product.price}}</p>
+      <div class="list-group">
+        <div class="list-group-item">
+          <div class="row">
+            <!--產品圖-->
+            <div class="col-md-3">
+              <span><img class="product-image" [src]="item.product.image "></span>
+            </div>
+            <!--產品名-->
+            <div class="col-md-6">
+              <h4 class="list-group-item-heading">
+                {{item.product.name}}
+              </h4>
+            </div>
+            <!--數量及價格-->
+            <div class="col-md-3">
+              <p class="list-group-item-text">Quantity:{{item.quantity}}</p>
+              <p class="list-group-item-text">Price:{{item.product.price}}</p>
+            </div>
           </div>
         </div>
       </div>
